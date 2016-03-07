@@ -5,11 +5,13 @@
 }
 
 img.ng-thumb {
-  height: 50px;
+  /*height: 50px;
   float: left;
   display: block;
   cursor: pointer;
-  margin: 2px 2px 0 0; 
+  margin: 2px 2px 0 0;*/ 
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .ng-overlay { 
@@ -21,12 +23,6 @@ img.ng-thumb {
   background: #000;
   opacity: 0.85;
   z-index: 9999;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-user-drag: none;
 }
 
 .ng-gallery-content { 
@@ -49,18 +45,6 @@ img.ng-thumb {
   position: absolute;
   top: 20px;
   right: 0;
-}
-
-.ng-gallery-content > a.download-image {
-  font-size: 42px;
-  float: right;
-  color: #fff;
-  text-decoration: none;
-  margin: 0 30px 0 0;
-  cursor: pointer;
-  position: absolute;
-  top: 20px;
-  right: 63px;
 }
 
 .ng-gallery-content > a.nav-left, .ng-gallery-content > a.nav-right {
@@ -96,22 +80,19 @@ img.ng-thumb {
   transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
   cursor: pointer;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-user-drag: none;
 }
 
-.ng-gallery-content > img.effect {
-  animation: fadeIn 0.5s;
+/*.ng-gallery-content > img.ng-hide-remove {
+    -webkit-animation: fadeOut 0.5s;
+    animation: fadeOut 0.5s;
+}*/
+ 
+.ng-gallery-content > img.ng-hide-add {
+    -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s;
+    display: block !important;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0.3; }
-      to { opacity: 1; }
-}
 
 .ng-gallery-content > span.info-text {
   color: #fff;
