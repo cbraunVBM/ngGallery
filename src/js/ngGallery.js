@@ -1,6 +1,6 @@
-angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch'])
+angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute'])
 
-.directive('ngGallery', ['$document', '$timeout', '$q', '$templateCache', function($document, $timeout, $q, $templateCache) {
+.directive('ngGallery', ['$document', '$timeout', '$q', '$templateCache','$location', function($document, $timeout, $q, $templateCache,$location) {
 	'use strict';
 
 	var defaults = { 
@@ -26,8 +26,11 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch'])
 	// Set the default template
   	$templateCache.put(template_url,
 	'<div class="{{ baseClass }}">' +
-	'  <uib-carousel>'+
-    '       <uib-slide ng-repeat="i in images">' +
+	'  <uib-carousel>' +
+	'		<uib-slide ng-if="video && video.length > 0"> ' + 
+    '             <youtube-video class="embed-responsive-item" video-url="video"></youtube-video> '+
+    '       </uib-slide>'+
+    '       <uib-slide ng-repeat="i in images" active="i.active">' +
 	'          <img ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="Image {{ $index + 1 }}" />' +
 	'       </uib-slide>'+
     '  </uib-carousel>' +
@@ -54,13 +57,28 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch'])
 		restrict: 'EA',
 		scope: {
 			images: '=',
-			thumbsNum: '@'
+			thumbsNum: '@',
+			video: '='
 		},
 		templateUrl: function(element, attrs) {
         		return attrs.templateUrl || defaults.templateUrl;
     		},
 		link: function (scope, element, attrs) {
 			setScopeValues(scope, attrs);
+
+			scope.$watch(function () {
+				for (var i = 0; i < scope.images.length; i++) {
+					if (scope.images[i].active) {
+						return scope.images[i];
+					}
+				}
+			}, function (currentImage, previousImage) {
+				if (currentImage !== previousImage) {
+					if(window.ga){
+						  ga('send', 'pageview', $location.path());
+					}					
+				}
+			});
 
 			if (scope.thumbsNum >= 11) {
 				scope.thumbsNum = 11;
@@ -104,6 +122,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch'])
 					smartScroll(scope.index);
 				});
 				scope.description = scope.images[i].description || '';
+				  ga('send', 'pageview', $location.path());
 			};
 
 			scope.changeImage = function (i) {
@@ -198,3 +217,4 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch'])
 	};
 
 }]);
+
