@@ -26,8 +26,8 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 	// Set the default template
   	$templateCache.put(template_url,
 	'<div class="{{ baseClass }}">' +
-	'  <uib-carousel>' +
-	'		<uib-slide ng-if="video && video.length > 0"> ' + 
+	'  <uib-carousel active="0">' +
+	'		<uib-slide ng-if="video && video.length > 0" index="0"> ' + 
     '             <youtube-video class="embed-responsive-item" video-url="video"></youtube-video> '+
     '       </uib-slide>'+
     '       <uib-slide ng-repeat="i in images" index="$index">' +
@@ -65,20 +65,6 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
     		},
 		link: function (scope, element, attrs) {
 			setScopeValues(scope, attrs);
-
-			scope.$watch(function () {
-				for (var i = 0; i < scope.images.length; i++) {
-					if (scope.images[i].active) {
-						return scope.images[i];
-					}
-				}
-			}, function (currentImage, previousImage) {
-				if (currentImage !== previousImage) {
-					if(window.ga){
-						  ga('send', 'pageview', $location.path());
-					}					
-				}
-			});
 
 			if (scope.thumbsNum >= 11) {
 				scope.thumbsNum = 11;
@@ -131,6 +117,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 					scope.img = resp.src;
 					smartScroll(scope.index);
 				});
+				 ga('send', 'pageview', $location.path());
 			};
 
 			scope.nextImage = function () {
@@ -217,4 +204,3 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 	};
 
 }]);
-
