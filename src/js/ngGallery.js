@@ -30,7 +30,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 	'		<uib-slide ng-if="video && video.length > 0"> ' + 
     '             <youtube-video class="embed-responsive-item" video-url="video"></youtube-video> '+
     '       </uib-slide>'+
-    '       <uib-slide ng-repeat="i in images" active="i.active" index="$index">' +
+    '       <uib-slide ng-repeat="i in images" index="$index">' +
 	'          <img ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="Image {{ $index + 1 }}" />' +
 	'       </uib-slide>'+
     '  </uib-carousel>' +
