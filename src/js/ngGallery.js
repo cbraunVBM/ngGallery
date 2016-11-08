@@ -27,11 +27,9 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
   	$templateCache.put(template_url,
 	'<div class="{{ baseClass }}">' +
 	'  <uib-carousel active="0">' +
-	'		<uib-slide ng-if="video && video.length > 0" index="0"> ' + 
-    '             <youtube-video class="embed-responsive-item" video-url="video"></youtube-video> '+
-    '       </uib-slide>'+
-    '       <uib-slide ng-repeat="i in images" index="$index">' +
-	'          <img ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="Image {{ $index + 1 }}" />' +
+    '       <uib-slide ng-repeat="i in slides" index="$index">' +
+    '          <youtube-video ng-if="i.type && i.type == \'video\'" class="embed-responsive-item" video-url="i.url"></youtube-video> '+
+	'          <img ng-if="i.thumb" ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="Image {{ $index + 1 }}" />' +
 	'       </uib-slide>'+
     '  </uib-carousel>' +
 	'</div>' +
@@ -74,6 +72,20 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 			var $thumbwrapper = angular.element(document.querySelectorAll('.ng-thumbnails-wrapper'));
 			var $thumbnails = angular.element(document.querySelectorAll('.ng-thumbnails'));
 
+			scope.slides = [];
+			if(scope.video && scope.video.length > 0){
+				var obj_video = {
+					"url":scope.video,
+					"type":"video"
+				}
+				scope.slides.push(obj_video);
+			}
+			scope.images.forEach(function(element) {
+				scope.slides.push(element);
+			}, this);
+			
+
+			console.log(scope.slides);
 			scope.index = 0;
 			scope.opened = false;
 
