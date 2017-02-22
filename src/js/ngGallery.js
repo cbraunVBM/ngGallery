@@ -29,7 +29,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 	'  <uib-carousel active="0">' +
     '       <uib-slide ng-repeat="i in slides" index="$index">' +
     '          <youtube-video ng-if="i.type && i.type == \'video\'" class="embed-responsive-item" video-url="i.url"></youtube-video> '+
-	'          <img ng-if="i.thumb" ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="Image {{ $index + 1 }}" />' +
+	'          <img ng-if="i.thumb" ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="{{ i.alt }}: {{ $index + 1 }}" />' +
 	'       </uib-slide>'+
     '  </uib-carousel>' +
 	'</div>' +
@@ -38,7 +38,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 	'<div class="ng-gallery-content" ng-show="opened">' +
 	'  <a class="close-popup" ng-click="closeGallery()"><i class="fa fa-close"></i></a>' +
 	'  <a class="nav-left" ng-click="prevImage()"><i class="fa fa-angle-left"></i></a>' +
-	'  <img ng-src="{{ img }}" ng-click="nextImage()" ng-swipe-right="nextImage()" ng-swipe-left="prevImage()" ng-show="!loading" class="effect" />' +
+	'  <img ng-src="{{ img }}" ng-click="nextImage()" ng-swipe-right="nextImage()" ng-swipe-left="prevImage()" ng-show="!loading" class="effect" alt="{{ alt }}"/>' +
 	'  <a class="nav-right" ng-click="nextImage()"><i class="fa fa-angle-right"></i></a>' +
 	'  <span class="info-text">{{ index + 1 }}/{{ images.length }}</span>' +
 	'  <div class="ng-thumbnails-wrapper">' +
@@ -84,8 +84,6 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 				scope.slides.push(element);
 			}, this);
 			
-
-			console.log(scope.slides);
 			scope.index = 0;
 			scope.opened = false;
 
@@ -109,6 +107,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 				};
 				
 				image.src = scope.images[i].img;
+				image.alt = scope.images[i].alt;
 				scope.loading = true;
 
 				return deferred.promise;
@@ -117,6 +116,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 			var showImage = function (i) {
 				loadImage(scope.index).then(function(resp) {
 					scope.img = resp.src;
+					scope.alt = resp.alt;
 					smartScroll(scope.index);
 				});
 				scope.description = scope.images[i].description || '';
@@ -127,6 +127,8 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 				scope.index = i;
 				loadImage(scope.index).then(function(resp) {
 					scope.img = resp.src;
+					scope.alt = resp.alt;
+
 					smartScroll(scope.index);
 				});
 				 ga('send', 'pageview', $location.path());
