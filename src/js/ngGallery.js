@@ -26,7 +26,7 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 	// Set the default template
   	$templateCache.put(template_url,
 	'<div class="{{ baseClass }}">' +
-	'  <uib-carousel active="0">' +
+	'  <uib-carousel active="0" on-carousel-change="onSlideChanged(nextSlide, direction)">' +
     '       <uib-slide ng-repeat="i in slides" index="$index">' +
     '          <youtube-video ng-if="i.type && i.type == \'video\'" class="embed-responsive-item" video-url="i.url"></youtube-video> '+
 	'          <img ng-if="i.thumb" ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="{{ i.alt }}: {{ $index + 1 }}" />' +
@@ -170,6 +170,13 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 				scope.opened = false;
 			};
 
+			scope.onSlideChanged = function(nextSlide, direction){
+				 //do not track initial loading
+				 if(typeof direction != "undefined"){
+				  ga('send', 'pageview', $location.path());
+				 }
+			}
+
 			$body.bind('keydown', function(event) {
 				if (!scope.opened) {
 					return;
@@ -217,4 +224,24 @@ angular.module('jkuri.gallery', ['ui.bootstrap','ngAnimate','ngTouch','ngRoute']
 		}
 	};
 
+}]);
+
+
+angular.module('jkuri.gallery').directive('onCarouselChange',["$parse",function ($parse) {
+  return {
+    require: 'uib-carousel',
+    link: function (scope, element, attrs, carouselCtrl) {
+      var fn = $parse(attrs.onCarouselChange);
+      var origSelect = carouselCtrl.select;
+      carouselCtrl.select = function (nextSlide, direction) {
+        if (nextSlide !== this.currentSlide) {
+          fn(scope, {
+            nextSlide: nextSlide,
+            direction: direction,
+          });
+        }
+        return origSelect.apply(this, arguments);
+      };
+    }
+  };
 }]);
